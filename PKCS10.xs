@@ -32,7 +32,7 @@ typedef struct
   if (New(0, p_var, p_size, p_type) == NULL) \
     { PACKAGE_CROAK("unable to alloc buffer"); }
 
-int add_ext(STACK_OF(X509_REQUEST) *sk, int nid, char *value);
+//int add_ext(STACK_OF(X509_REQUEST) *sk, int nid, char *value);
 X509_NAME *parse_name(char *str, long chtype, int multirdn); 
 
 /*
@@ -554,3 +554,64 @@ add_ext_final(pkcs10)
   }
 	OUTPUT:
 	  RETVAL
+
+
+
+
+SV*
+new_from_file(class, filename_SV)
+        SV* class;
+        SV* filename_SV;
+
+        PREINIT:
+          unsigned char* filename;
+          int filename_length;
+          FILE* fp;
+          X509_REQ *req;
+
+        CODE:
+          filename = SvPV(filename_SV, filename_length);
+          fp = fopen(filename, "r");
+          req = PEM_read_X509_REQ (fp, NULL, NULL, NULL);
+          fclose(fp);
+
+          RETVAL = make_pkcs10_obj(class, req, NULL, NULL, NULL);
+
+        OUTPUT:
+          RETVAL
+
+
+SV*
+accessor(pkcs10)
+        pkcs10Data *pkcs10;
+
+        ALIAS:
+        subject = 1
+	key = 2
+
+
+        PREINIT:
+        BIO *bio;
+        X509_NAME *name;
+
+        CODE:
+
+        bio = sv_bio_create();
+
+        /* this includes both serial and issuer since they are so much alike */
+	if (ix == 1) {
+		name = X509_REQ_get_subject_name(pkcs10->req);
+		//printf(name);
+	} else if (ix == 2) {
+		printf(X509_REQ_extract_key(pkcs10->req));
+	}
+
+	/* this is prefered over X509_NAME_oneline() */
+	X509_NAME_print_ex(bio, name, 0, XN_FLAG_SEP_CPLUS_SPC);
+
+
+        RETVAL = sv_bio_final(bio);
+
+        OUTPUT:
+          RETVAL
+
