@@ -84,6 +84,12 @@ Create a new Crypt::OpenSSL::PKCS10 object by using key information from a Crypt
   my $rsa = Crypt::OpenSSL::RSA->generate_key(512);
   my $req = Crypt::OpenSSL::PKCS10->new_from_rsa($rsa);
 
+=item new_from_file( $filename )
+
+Create a new Crypt::OpenSSL::PKCS10 object by reading the request and key information from a PEM formatted file. Here is an example:
+
+  my $req = Crypt::OpenSSL::PKCS10->new_from_file("CSR.csr");
+
 =back
 
 =head1 Instance Methods
