@@ -48,7 +48,7 @@ ok($req);
 }
 
 {
-my $req = Crypt::OpenSSL::PKCS10->new_from_file("CSR.csr");
+my $req = Crypt::OpenSSL::PKCS10->new_from_file("t/CSR.csr");
 print STDERR $req->subject()."\n";
 print STDERR $req->key()."\n";
 ok($req);
