@@ -587,12 +587,13 @@ accessor(pkcs10)
 
         ALIAS:
         subject = 1
-	key = 2
+        key = 2
 
 
         PREINIT:
         BIO *bio;
         X509_NAME *name;
+        EVP_PKEY *key;
 
         CODE:
 
@@ -601,13 +602,11 @@ accessor(pkcs10)
         /* this includes both serial and issuer since they are so much alike */
 	if (ix == 1) {
 		name = X509_REQ_get_subject_name(pkcs10->req);
-		//printf(name);
+		X509_NAME_print_ex(bio, name, 0, XN_FLAG_SEP_CPLUS_SPC);
 	} else if (ix == 2) {
-		printf(X509_REQ_extract_key(pkcs10->req));
+		key = X509_REQ_extract_key(pkcs10->req);
+                RSA_print(bio, EVP_PKEY_get1_RSA(key), 0);
 	}
-
-	/* this is prefered over X509_NAME_oneline() */
-	X509_NAME_print_ex(bio, name, 0, XN_FLAG_SEP_CPLUS_SPC);
 
 
         RETVAL = sv_bio_final(bio);
