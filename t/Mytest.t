@@ -17,7 +17,7 @@ BEGIN { use_ok('Crypt::OpenSSL::PKCS10') };
 my $req = Crypt::OpenSSL::PKCS10->new();
 print STDERR $req->get_pem_req();
 print STDERR $req->subject()."\n";
-print STDERR $req->key()."\n";
+print STDERR $req->keyinfo()."\n";
 ok($req);
 }
 
@@ -28,7 +28,7 @@ my $rsa = Crypt::OpenSSL::RSA->generate_key(1024);
 my $req = Crypt::OpenSSL::PKCS10->new_from_rsa($rsa);
 print STDERR $req->get_pem_req();
 print STDERR $req->subject()."\n";
-print STDERR $req->key()."\n";
+print STDERR $req->keyinfo()."\n";
 ok($req);
 }
 
@@ -43,13 +43,13 @@ $req->add_ext_final();
 $req->sign();
 print STDERR $req->get_pem_req();
 print STDERR $req->subject()."\n";
-print STDERR $req->key()."\n";
+print STDERR $req->keyinfo()."\n";
 ok($req);
 }
 
 {
 my $req = Crypt::OpenSSL::PKCS10->new_from_file("t/CSR.csr");
 print STDERR $req->subject()."\n";
-print STDERR $req->key()."\n";
+print STDERR $req->keyinfo()."\n";
 ok($req);
 }
