@@ -153,6 +153,18 @@ Writes the PEM encoding of the private key to a given file.
 
   $req->write_pem_pk('request.pem');
 
+=item subject()
+
+returns the subject of the PKCS10 request
+
+  $subject = $req->subject();
+
+=item keyinfo()
+
+returns the human readable info about the key of the PKCS10 request
+
+  $keyinfo = $req->keyinfo();
+
 =back
 
 =head2 EXPORT
